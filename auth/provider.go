@@ -3,10 +3,12 @@ package auth
 import (
 	"context"
 	"errors"
-	"github.com/Nerzal/gocloak/v10"
-	"github.com/golang-jwt/jwt/v4"
+	"fmt"
 	"strings"
 	"time"
+
+	"github.com/Nerzal/gocloak/v10"
+	"github.com/golang-jwt/jwt/v4"
 )
 
 type Provider interface {
@@ -83,6 +85,17 @@ func (r *Keycloak) Scopes(token string) (scopes []Scope, err error) {
 		err = errors.New("invalid token")
 		return
 	}
+
+	fmt.Printf("-------------------------- token: %v", decoded)
+
+	// Ger UserInfo
+	userInfo, err := r.client.GetUserInfo(ctx, token, r.realm)
+	if err != nil {
+		err = errors.New("failed get userInfo")
+		return
+	}
+	fmt.Printf("-------------------------- userInfo: %v", userInfo)
+
 	claims, ok := decoded.Claims.(*jwt.MapClaims)
 	if !ok || claims == nil {
 		err = errors.New("invalid token")

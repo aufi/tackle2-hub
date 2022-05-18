@@ -89,7 +89,7 @@ func (r *Keycloak) Scopes(token string) (scopes []Scope, err error) {
 	defer cancel2()
 	userInfo, err := r.client.GetUserInfo(ctx2, token, r.realm)
 	if err != nil {
-		err = errors.New("failed get userInfo")
+		fmt.Printf("failed get userInfo, err: %v", err)
 		return
 	}
 	fmt.Printf("-------------------------- userInfo: %v", userInfo)

@@ -2,11 +2,12 @@ package api
 
 import (
 	"encoding/json"
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	"github.com/konveyor/tackle2-hub/auth"
 	"github.com/konveyor/tackle2-hub/model"
 	"gorm.io/gorm/clause"
-	"net/http"
 )
 
 //

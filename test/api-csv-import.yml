@@ -1,0 +1,31 @@
+name: CSV import test suite
+vars:
+  url: http://localhost:8080
+
+testcases:
+- name: ImportApplicationsCSV
+  steps:
+  - type: http
+    method: POST
+    url: '{{.url}}/importsummaries/upload'
+    multipart_form:
+      file: '@./template_application_import.csv'
+    assertions:
+    - result.statuscode ShouldEqual 201
+    - result.bodyjson.id ShouldNotBeEmpty
+
+    # sleep here? didn't need it so far
+  - type: http
+    # method: GET and assertion of http response code: 200 are default
+    url: '{{.url}}/businessservices'
+    assertions:
+    - result.bodyjson ShouldHaveLength 2
+    - result.bodyjson.bodyjson0.name ShouldEqual "Retail"
+    - result.bodyjson.bodyjson1.name ShouldEqual "Finance and HR"
+
+  - type: http
+    url: '{{.url}}/applications'
+    assertions:
+    - result.bodyjson ShouldHaveLength 3
+    - result.bodyjson.bodyjson0.name ShouldEqual ""
+    - result.bodyjson.bodyjson1.name ShouldEqual ""

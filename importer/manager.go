@@ -98,10 +98,10 @@ func (m *Manager) createDependency(imp *model.Import) (ok bool) {
 
 	dependency := &model.Dependency{}
 	switch strings.ToLower(imp.DependencyDirection) {
-	case "northbound":
+	case "northbound", "outbound":
 		dependency.FromID = dep.ID
 		dependency.ToID = app.ID
-	case "southbound":
+	case "southbound", "inbound":
 		dependency.FromID = app.ID
 		dependency.ToID = dep.ID
 	}

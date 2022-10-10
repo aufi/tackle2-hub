@@ -325,7 +325,7 @@ func (h ImportHandler) DownloadCSV(ctx *gin.Context) {
 // Col 2: Application Name -- The name of the application that has the dependency relationship.
 //                            This application must exist.
 // Col 6: Dependency -- The name of the application on the other side of the dependency relationship.
-// Col 7: Dependency Direction -- Whether this is a "northbound" or "southbound" dependency.
+// Col 7: Dependency Direction -- Whether this is a "northbound"/"outbound" or "southbound"/"inbound" dependency.
 //
 // Between the Application Name and the Dependency field there may be an arbitrary number of columns representing
 // tags or other fields that only pertain to an application import. The dependency and direction will always be

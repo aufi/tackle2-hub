@@ -22,6 +22,7 @@ const (
 	TaskBucketRoot = TaskRoot + "/bucket/*" + Wildcard
 	TaskSubmitRoot = TaskRoot + "/submit"
 	TaskCancelRoot = TaskRoot + "/cancel"
+	TaskImportRoot = TaskRoot + "/import"
 )
 
 const (
@@ -43,6 +44,7 @@ func (h TaskHandler) AddRoutes(e *gin.Engine) {
 	routeGroup.GET(TasksRoot, h.List)
 	routeGroup.GET(TasksRoot+"/", h.List)
 	routeGroup.POST(TasksRoot, h.Create)
+	routeGroup.POST(TaskImportRoot, h.ImportFinished)
 	routeGroup.GET(TaskRoot, h.Get)
 	routeGroup.PUT(TaskRoot, h.Update)
 	routeGroup.DELETE(TaskRoot, h.Delete)
@@ -108,6 +110,45 @@ func (h TaskHandler) List(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, resources)
+}
+
+// Create godoc
+// @summary Import finished task.
+// @description Import finished task.
+// @tags create
+// @accept json
+// @produce json
+// @success 201 {object} api.Task
+// @router /tasks [post]
+// @param task body api.Task true "Task data"
+func (h TaskHandler) ImportFinished(ctx *gin.Context) {
+	r := Task{}
+	err := ctx.BindJSON(&r)
+	if err != nil {
+		h.createFailed(ctx, err)
+		return
+	}
+	switch r.State {
+	case tasking.Succeeded,
+		tasking.Failed:
+	default:
+		ctx.JSON(
+			http.StatusBadRequest,
+			gin.H{
+				"error": "state must be (Succeeded|Failed)",
+			})
+		return
+	}
+	m := r.Model()
+	db := h.omitted(h.DB)
+	result := db.Create(&m)
+	if result.Error != nil {
+		h.createFailed(ctx, result.Error)
+		return
+	}
+	r.With(m)
+
+	ctx.JSON(http.StatusCreated, r)
 }
 
 // Create godoc

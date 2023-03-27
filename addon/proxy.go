@@ -15,7 +15,7 @@ type Proxy struct {
 // Get a proxy by ID.
 func (h *Proxy) Get(id uint) (r *api.Proxy, err error) {
 	r = &api.Proxy{}
-	path := Params{api.ID: id}.inject(api.ProxyRoot)
+	path := Params{api.ID: id}.Inject(api.ProxyRoot)
 	err = h.client.Get(path, r)
 	return
 }
@@ -52,7 +52,7 @@ func (h *Proxy) List() (list []api.Proxy, err error) {
 //
 // Update a proxy by ID.
 func (h *Proxy) Update(r *api.Proxy) (err error) {
-	path := Params{api.ID: r.ID}.inject(api.ProxyRoot)
+	path := Params{api.ID: r.ID}.Inject(api.ProxyRoot)
 	err = h.client.Put(path, r)
 	return
 }

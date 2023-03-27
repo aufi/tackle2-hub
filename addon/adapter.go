@@ -157,7 +157,7 @@ type Params map[string]interface{}
 
 //
 // inject values into path.
-func (p Params) inject(path string) (s string) {
+func (p Params) Inject(path string) (s string) {
 	in := strings.Split(path, "/")
 	for i := range in {
 		if len(in[i]) < 1 {

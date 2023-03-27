@@ -17,7 +17,7 @@ type Application struct {
 // Get an application by ID.
 func (h *Application) Get(id uint) (r *api.Application, err error) {
 	r = &api.Application{}
-	path := Params{api.ID: id}.inject(api.ApplicationRoot)
+	path := Params{api.ID: id}.Inject(api.ApplicationRoot)
 	err = h.client.Get(path, r)
 	return
 }
@@ -33,7 +33,7 @@ func (h *Application) List() (list []api.Application, err error) {
 //
 // Update an application by ID.
 func (h *Application) Update(r *api.Application) (err error) {
-	path := Params{api.ID: r.ID}.inject(api.ApplicationRoot)
+	path := Params{api.ID: r.ID}.Inject(api.ApplicationRoot)
 	err = h.client.Put(path, r)
 	if err == nil {
 		Log.Info(
@@ -56,7 +56,7 @@ func (h *Application) FindIdentity(id uint, kind string) (r *api.Identity, found
 		Key:   api.Decrypted,
 		Value: "1",
 	}
-	path := Params{api.ID: id}.inject(api.IdentitiesRoot)
+	path := Params{api.ID: id}.Inject(api.IdentitiesRoot)
 	err = h.client.Get(path, &list, p1, p2)
 	if err != nil {
 		return
@@ -80,7 +80,7 @@ func (h *Application) Bucket(id uint) (b *Bucket) {
 		api.Wildcard: "",
 		api.ID:       id,
 	}
-	path := params.inject(api.AppBucketContentRoot)
+	path := params.Inject(api.AppBucketContentRoot)
 	b = &Bucket{
 		path:   path,
 		client: h.client,
@@ -121,7 +121,7 @@ func (h *AppTags) Replace(ids []uint) (err error) {
 		err = liberr.New("`source` must be set")
 		return
 	}
-	path := Params{api.ID: h.appId}.inject(api.ApplicationTagsRoot)
+	path := Params{api.ID: h.appId}.Inject(api.ApplicationTagsRoot)
 	query := []Param{}
 	if h.source != nil {
 		query = append(query, Param{Key: api.Source, Value: *h.source})
@@ -141,7 +141,7 @@ func (h *AppTags) Replace(ids []uint) (err error) {
 // Returns a list of tag names.
 func (h *AppTags) List() (list []api.TagRef, err error) {
 	list = []api.TagRef{}
-	path := Params{api.ID: h.appId}.inject(api.ApplicationTagsRoot)
+	path := Params{api.ID: h.appId}.Inject(api.ApplicationTagsRoot)
 	query := []Param{}
 	if h.source != nil {
 		query = append(query, Param{Key: api.Source, Value: *h.source})
@@ -153,7 +153,7 @@ func (h *AppTags) List() (list []api.TagRef, err error) {
 //
 // Add ensures tag is associated with the application.
 func (h *AppTags) Add(id uint) (err error) {
-	path := Params{api.ID: h.appId}.inject(api.ApplicationTagsRoot)
+	path := Params{api.ID: h.appId}.Inject(api.ApplicationTagsRoot)
 
 	tag := api.TagRef{ID: id}
 	if h.source != nil {
@@ -168,7 +168,7 @@ func (h *AppTags) Add(id uint) (err error) {
 func (h *AppTags) Delete(id uint) (err error) {
 	path := Params{
 		api.ID:  h.appId,
-		api.ID2: id}.inject(api.ApplicationTagRoot)
+		api.ID2: id}.Inject(api.ApplicationTagRoot)
 	query := []Param{}
 	if h.source != nil {
 		query = append(query, Param{Key: api.Source, Value: *h.source})
@@ -200,7 +200,7 @@ type AppFacts struct {
 // Returns a list of tag names.
 func (h *AppFacts) List() (list []api.Fact, err error) {
 	list = []api.Fact{}
-	path := Params{api.ID: h.appId}.inject(api.ApplicationFactsRoot)
+	path := Params{api.ID: h.appId}.Inject(api.ApplicationFactsRoot)
 	err = h.client.Get(path, &list)
 	return
 }
@@ -211,7 +211,7 @@ func (h *AppFacts) Get(key string, valuePtr interface{}) (err error) {
 	path := Params{
 		api.ID:  h.appId,
 		api.Key: key,
-	}.inject(api.ApplicationFactRoot)
+	}.Inject(api.ApplicationFactRoot)
 	err = h.client.Get(path, valuePtr)
 	return
 }
@@ -222,7 +222,7 @@ func (h *AppFacts) Set(key string, value interface{}) (err error) {
 	path := Params{
 		api.ID:  h.appId,
 		api.Key: key,
-	}.inject(api.ApplicationFactRoot)
+	}.Inject(api.ApplicationFactRoot)
 	err = h.client.Put(path, value)
 	return
 }
@@ -233,7 +233,7 @@ func (h *AppFacts) Delete(key string) (err error) {
 	path := Params{
 		api.ID:  h.appId,
 		api.Key: key,
-	}.inject(api.ApplicationFactRoot)
+	}.Inject(api.ApplicationFactRoot)
 	err = h.client.Delete(path)
 	return
 }

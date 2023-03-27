@@ -15,7 +15,7 @@ type File struct {
 //
 // Get downloads a file.
 func (h *File) Get(id uint, destination string) (err error) {
-	path := Params{api.ID: id}.inject(api.FileRoot)
+	path := Params{api.ID: id}.Inject(api.FileRoot)
 	isDir, err := h.client.isDir(destination, false)
 	if err != nil {
 		return
@@ -38,7 +38,7 @@ func (h *File) Get(id uint, destination string) (err error) {
 // Put uploads a file.
 func (h *File) Put(source string) (r *api.File, err error) {
 	r = &api.File{}
-	path := Params{api.ID: pathlib.Base(source)}.inject(api.FileRoot)
+	path := Params{api.ID: pathlib.Base(source)}.Inject(api.FileRoot)
 	err = h.client.FilePut(path, source, r)
 	return
 }
@@ -46,7 +46,7 @@ func (h *File) Put(source string) (r *api.File, err error) {
 //
 // Delete a file.
 func (h *File) Delete(id uint) (err error) {
-	path := Params{api.ID: id}.inject(api.FileRoot)
+	path := Params{api.ID: id}.Inject(api.FileRoot)
 	err = h.client.Delete(path)
 	return
 }
